@@ -12,8 +12,7 @@ opcao = 'Início'
 qtd_limite_saque = 3
 VALOR_LIMITE_SAQUE = 500.0
 saldo = 2000.0
-valor_saque = 0
-
+valor_saque = valor_deposito = 0
 
 # Dando início ao menu
 while True:
@@ -34,9 +33,8 @@ while True:
                 if valor_saque <= saldo:
                     qtd_limite_saque -= 1
                     saldo -= valor_saque
-                    print('       Saque realizado com sucesso')
-                    print(f'Saques restantes: {qtd_limite_saque}')
-                    print(f'Saldo restante: R${saldo:.2f}')
+                    print('                SUCESSO!')
+                    print(f'       Saque de R${valor_saque:.2f} realizado')
                 else:
                     print('                  ERRO!')
                     print('      Valor indisponível para saque')
@@ -54,7 +52,17 @@ while True:
         
 
     elif opcao == 'D':
-        print('Você escolheu depositar')
+        # Lógica de realização do depósito
+        valor_deposito = int(input('Valor do depósito: R$ '))
+        saldo += valor_deposito
+        print()
+        print('                SUCESSO!')
+        print(f'      Depósito de R${valor_deposito:.2f} realizado')
+        
+        print()
+        print('Retornando ao menu...')
+        
+        # Lógica registro no extrato
     
     elif opcao == 'E':
         print('Você escolheu consultar extrato')
