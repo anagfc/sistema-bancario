@@ -1,16 +1,17 @@
 def realizar_saque(*, saldo_em_conta, quantidade_saques, extrato):
     VALOR_LIMITE_SAQUE = 500.0
     acrescimo_extrato = ''
-    realização_operacao = bool
+    realizacao_operacao = bool
     valor_saque = int(input('Valor do saque: R$ '))
     if quantidade_saques > 0:
         if valor_saque <= VALOR_LIMITE_SAQUE:
             if valor_saque <= saldo_em_conta:
                 saldo_em_conta -= valor_saque
                 quantidade_saques -= 1
+                acrescimo_extrato = f'Saque de R$ {valor_saque:.2f} realizado'
                 print('                SUCESSO!')
                 print(' '* 7, acrescimo_extrato)
-                acrescimo_extrato = f'Saque de R$ {valor_saque:.2f} realizado'
+                
                 if 'Nenhuma' in extrato[0]:
                     extrato[0] = acrescimo_extrato
                 else:
@@ -32,6 +33,25 @@ def realizar_saque(*, saldo_em_conta, quantidade_saques, extrato):
         print('        Limite de saques atingido')
         return realização_operacao
 
+def realizar_depósito(saldo_em_conta, extrato , /):
+    acrescimo_extrato = ''
+    realizacao_operacao = bool
+    valor_deposito = int(input('Valor do depósito: R$ '))
+    if valor_deposito > 0:
+        saldo_em_conta += valor_deposito
+        acrescimo_extrato = f'Depósito de R$ {valor_deposito:.2f} realizado'
+        print('\n                SUCESSO!')
+        print(' ' * 6, acrescimo_extrato)
+        if 'Nenhuma' in extrato[0]:
+            extrato[0] = acrescimo_extrato
+        else:
+            extrato.append(acrescimo_extrato)
+        return saldo_em_conta, extrato        
+    else:
+        print('\nValor de depósito inválido')
+        realizacao_operacao = False
+        return realizacao_operacao
+
 banco = 'Goliath National Bank (GNB)'
 slogan = 'The world leader in credit and banking'
 menu ='''         Seja bem-vindo ao GNB!
@@ -45,7 +65,7 @@ Selecione uma operação: '''
 opcao = 'Início'
 saques_restantes = 3
 saldo = 1500.0
-historico_movimentacoes = []
+historico_movimentacoes = ['Nenhuma operação realizada']
 
 # Dando início ao menu
 while True:
@@ -66,22 +86,14 @@ while True:
             historico_movimentacoes = operacao[2]
             print('\nRetornando ao menu...')
         
-
     elif opcao == 'D':
-        # Lógica de realização do depósito
-        valor_deposito = int(input('Valor do depósito: R$ '))
-        if valor_deposito > 0:
-            saldo += valor_deposito
-            print('\n                SUCESSO!')
-            print(f'      Depósito de R$ {valor_deposito:.2f} realizado')
-        else:
-            print('\nValor de depósito inválido')
-            
-        print('\nRetornando ao menu...')
+        operacao = realizar_depósito(saldo, historico_movimentacoes)
+        if operacao == False:
+            print('\nRetornando ao menu...')
+        elif len(operacao) > 1:
+            saldo = operacao[0]
+            historico_movimentacoes = operacao[1]
         
-        # Lógica registro no extrato
-        historico_depositos.append(valor_deposito)
-    
     elif opcao == 'E':
         print(f'\n{banco:^41}'.upper())
         print(f'{slogan:^41}')
