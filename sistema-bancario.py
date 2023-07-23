@@ -1,3 +1,37 @@
+def realizar_saque(*, saldo_em_conta, quantidade_saques, extrato):
+    VALOR_LIMITE_SAQUE = 500.0
+    acrescimo_extrato = ''
+    realização_operacao = bool
+    valor_saque = int(input('Valor do saque: R$ '))
+    if quantidade_saques > 0:
+        if valor_saque <= VALOR_LIMITE_SAQUE:
+            if valor_saque <= saldo_em_conta:
+                saldo_em_conta -= valor_saque
+                quantidade_saques -= 1
+                print('                SUCESSO!')
+                print(' '* 7, acrescimo_extrato)
+                acrescimo_extrato = f'Saque de R$ {valor_saque:.2f} realizado'
+                if 'Nenhuma' in extrato[0]:
+                    extrato[0] = acrescimo_extrato
+                else:
+                    extrato.append(acrescimo_extrato)
+                return saldo_em_conta, quantidade_saques, extrato 
+            else:
+                realização_operacao = False
+                print('                  ERRO!')
+                print('      Valor indisponível para saque')
+                return realização_operacao   
+        else:
+            realização_operacao = False
+            print('                  ERRO!')
+            print('       Valor de saque indisponível')
+            return realização_operacao   
+    else:
+        realização_operacao = False
+        print('                  ERRO!')
+        print('        Limite de saques atingido')
+        return realização_operacao
+
 banco = 'Goliath National Bank (GNB)'
 slogan = 'The world leader in credit and banking'
 menu ='''         Seja bem-vindo ao GNB!
@@ -9,13 +43,9 @@ menu ='''         Seja bem-vindo ao GNB!
 Selecione uma operação: '''
 
 opcao = 'Início'
-qtd_limite_saque = 3
-VALOR_LIMITE_SAQUE = 500.0
+saques_restantes = 3
 saldo = 1500.0
-valor_saque = valor_deposito = 0
-historico_depositos = []
-historico_saques = []
-historico_saldos = [saldo]
+historico_movimentacoes = []
 
 # Dando início ao menu
 while True:
@@ -27,32 +57,14 @@ while True:
     print('-'*41)
     
     if opcao == 'S':
-        # Lógica de realização do saque
-        valor_saque = int(input('Valor do saque: R$ '))
-        print()
-        
-        if qtd_limite_saque > 0:
-            if valor_saque <= VALOR_LIMITE_SAQUE:
-                if valor_saque <= saldo:
-                    qtd_limite_saque -= 1
-                    saldo -= valor_saque
-                    print('                SUCESSO!')
-                    print(f'       Saque de R$ {valor_saque:.2f} realizado')
-                    
-                    # Lógica registro no extrato
-                    historico_saques.append(valor_saque)
-                       
-                else:
-                    print('                  ERRO!')
-                    print('      Valor indisponível para saque')
-            else:
-                print('                  ERRO!')
-                print('       Valor de saque indisponível')
-        else:
-            print('                  ERRO!')
-            print('        Limite de saques atingido')
-        
-        print('\nRetornando ao menu...')
+        operacao = realizar_saque(saldo_em_conta= saldo, quantidade_saques= saques_restantes, extrato= historico_movimentacoes)
+        if operacao == False:
+            print('\nRetornando ao menu...')
+        elif len(operacao) > 1:
+            saldo = operacao[0]
+            saques_restantes = operacao[1]
+            historico_movimentacoes = operacao[2]
+            print('\nRetornando ao menu...')
         
 
     elif opcao == 'D':
