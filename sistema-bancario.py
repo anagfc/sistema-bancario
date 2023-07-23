@@ -9,8 +9,8 @@ def realizar_saque(*, saldo_em_conta, quantidade_saques, extrato):
                 saldo_em_conta -= valor_saque
                 quantidade_saques -= 1
                 acrescimo_extrato = f'Saque de R$ {valor_saque:.2f} realizado'
-                print('                SUCESSO!')
-                print(' '* 7, acrescimo_extrato)
+                print('\n                SUCESSO!')
+                print(' '* 5, acrescimo_extrato)
                 
                 if 'Nenhuma' in extrato[0]:
                     extrato[0] = acrescimo_extrato
@@ -19,17 +19,17 @@ def realizar_saque(*, saldo_em_conta, quantidade_saques, extrato):
                 return saldo_em_conta, quantidade_saques, extrato 
             else:
                 realização_operacao = False
-                print('                  ERRO!')
+                print('\n                  ERRO!')
                 print('      Valor indisponível para saque')
                 return realização_operacao   
         else:
             realização_operacao = False
-            print('                  ERRO!')
+            print('\n                  ERRO!')
             print('       Valor de saque indisponível')
             return realização_operacao   
     else:
         realização_operacao = False
-        print('                  ERRO!')
+        print('\n                  ERRO!')
         print('        Limite de saques atingido')
         return realização_operacao
 
@@ -41,16 +41,30 @@ def realizar_depósito(saldo_em_conta, extrato , /):
         saldo_em_conta += valor_deposito
         acrescimo_extrato = f'Depósito de R$ {valor_deposito:.2f} realizado'
         print('\n                SUCESSO!')
-        print(' ' * 6, acrescimo_extrato)
+        print(' ' * 4, acrescimo_extrato)
         if 'Nenhuma' in extrato[0]:
             extrato[0] = acrescimo_extrato
         else:
             extrato.append(acrescimo_extrato)
+        print('\nRetornando ao menu...')
         return saldo_em_conta, extrato        
     else:
-        print('\nValor de depósito inválido')
+        print('\n                  ERRO!')
+        print('       Valor de depósito inválido')
         realizacao_operacao = False
         return realizacao_operacao
+
+def visualizar_extrato(saldo_em_conta, saldo_de_inicio, /, nome_banco, slogan_banco, quantidade_saques, *, extrato):
+    print(f'\n{nome_banco:^41}'.upper())
+    print(f'{slogan_banco:^41}')
+    print('-' * 41)
+    print('\n            Extrato da conta\n')
+    print(f'Saldo inicial: R$ {saldo_de_inicio:.2f}\n')
+    for transacao in extrato:
+        print(f'{transacao}')
+    print('-' * 41)
+    print(f'Saldo atual da conta: R$ {saldo_em_conta:.2f}')
+    print(f'Saques diários restantes: {quantidade_saques}\n')
 
 banco = 'Goliath National Bank (GNB)'
 slogan = 'The world leader in credit and banking'
@@ -65,6 +79,7 @@ Selecione uma operação: '''
 opcao = 'Início'
 saques_restantes = 3
 saldo = 1500.0
+saldo_inicial = saldo
 historico_movimentacoes = ['Nenhuma operação realizada']
 
 # Dando início ao menu
@@ -95,33 +110,11 @@ while True:
             historico_movimentacoes = operacao[1]
         
     elif opcao == 'E':
-        print(f'\n{banco:^41}'.upper())
-        print(f'{slogan:^41}')
-        print('-' * 41)
-        print('\n            Extrato da conta\n')
-        if len(historico_depositos) == 0 and len(historico_saques) == 0:
-            print('       Nenhuma operação realizada')
-            print('-' * 41)
-        else:
-            print(f'Saldo inicial: R$ {historico_saldos[0]:.2f}\n')
-        if len(historico_depositos) > 0:
-            print('depósitos'.upper())
-            for deposito in historico_depositos:
-                print(f'R$ {deposito:.2f}')
-            print('-' * 41)
-        if len(historico_saques) > 0:
-            print('saques'.upper())
-            for saque in historico_saques:
-                print(f'R$ {saque:.2f}')
-            print('-' * 41)
-        print(f'Saldo atual da conta: R$ {saldo:.2f}')
-        print(f'Saques diários restantes: {qtd_limite_saque}\n')
+        visualizar_extrato(saldo, saldo_inicial, banco, slogan, saques_restantes, extrato= historico_movimentacoes)
     
     elif opcao == 'Q':
-        print('      O GNB agradece a preferência!')
-        print()
+        print('      O GNB agradece a preferência!\n')
         break
     
     else:
-        print('   Operação inválida. Tente novamente')
-        print()
+        print('   Operação inválida. Tente novamente\n')
