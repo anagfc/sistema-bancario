@@ -68,12 +68,12 @@ def visualizar_extrato(saldo_em_conta, saldo_de_inicio, /, nome_banco, slogan_ba
 
 def cadastrar_usuario(lista_clientes):
     usuario = {}
-    cpf_cadastro = int(input('Insira seu CPF (somente números): '))
-    if f'{cpf_cadastro}' in lista_clientes:
+    cpf_cadastro = str(input('Insira seu CPF (somente números): '))
+    if cpf_cadastro in lista_clientes:
         print('Cliente já existente.')
     else:
         nome_cadastro = str(input('Nome completo: '))
-        nascimento_cadastro = str(input('Data de nascimento (xx/xx/xxxx): '))
+        nascimento_cadastro = str(input('Data de nascimento (dd/mm/aaaa): '))
         logradouro_cadastro = str(input('Endereço - Rua/Avenida: '))
         numero_cadastro = str(input('Endereço - Nº: '))
         bairro_cadastro = str(input('Endereço - Bairro: '))
@@ -81,13 +81,12 @@ def cadastrar_usuario(lista_clientes):
         uf_cadastro = str(input('Endereço - UF: '))
         endereco_cadastro = logradouro_cadastro + ', ' + numero_cadastro + ' - ' + bairro_cadastro + ' - ' + cidade_cadastro + '/' + uf_cadastro
 
-        usuario['CPF'] = cpf_cadastro
         usuario['nome'] = nome_cadastro
+        usuario['CPF'] = cpf_cadastro
         usuario['nascimento'] = nascimento_cadastro
         usuario['endereco'] = endereco_cadastro
 
-        chave_principal = usuario['CPF']
-        lista_clientes[f'{chave_principal}'] = usuario
+        lista_clientes[usuario['CPF']] = usuario
 
         return lista_clientes
 
