@@ -69,8 +69,10 @@ def visualizar_extrato(saldo_em_conta, saldo_de_inicio, /, nome_banco, slogan_ba
 def cadastrar_usuario(lista_clientes):
     usuario = {}
     cpf_cadastro = str(input('Insira seu CPF (somente números): '))
-    if cpf_cadastro in lista_clientes:
-        print('Cliente já existente.')
+    if len(lista_clientes) > 0:
+        for dados in lista_clientes:
+            if cpf_cadastro in dados.values():
+                print('Cliente já está cadastrado.')
     else:
         nome_cadastro = str(input('Nome completo: '))
         nascimento_cadastro = str(input('Data de nascimento (dd/mm/aaaa): '))
@@ -86,9 +88,21 @@ def cadastrar_usuario(lista_clientes):
         usuario['nascimento'] = nascimento_cadastro
         usuario['endereco'] = endereco_cadastro
 
-        lista_clientes[usuario['CPF']] = usuario
+        lista_clientes.append(usuario)
 
         return lista_clientes
+
+def cadastrar_conta(lista_contas, lista_clientes):
+    AGENCIA = '0001'
+    cpf_cadastro = str(input('CPF do titular (apenas números): '))
+    if cpf_cadastro not in lista_clientes:
+        print('Cliente não encontrado. Cadastre-o antes de vincular conta.')
+    else:
+        num_conta = len(lista_contas) + 1
+        conta = {'agencia': AGENCIA, 'conta': f'{num_conta}', 'usuario': lista_clientes[cpf_cadastro]['CPF']}
+        lista_contas.append(conta)
+    
+    return lista_contas
 
 banco = 'Goliath National Bank (GNB)'
 slogan = 'The world leader in credit and banking'
@@ -106,7 +120,8 @@ Já é nosso cliente? ---------------------
 
 Selecione uma operação: '''
 
-clientes = {}
+clientes = []
+contas = []
 opcao = 'Início'
 saques_restantes = 3
 saldo = 1500.0
@@ -149,7 +164,9 @@ while True:
     
     elif opcao == 'N':
         clientes = cadastrar_usuario(clientes)
-        print(clientes)
     
+    elif opcao == 'C':
+        contas = cadastrar_conta(contas, clientes)
+        
     else:
         print('   Operação inválida. Tente novamente\n')
