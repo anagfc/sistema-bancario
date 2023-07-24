@@ -66,9 +66,40 @@ def visualizar_extrato(saldo_em_conta, saldo_de_inicio, /, nome_banco, slogan_ba
     print(f'Saldo atual da conta: R$ {saldo_em_conta:.2f}')
     print(f'Saques diários restantes: {quantidade_saques}\n')
 
+def cadastrar_usuario(lista_clientes):
+    usuario = {}
+    cpf_cadastro = int(input('Insira seu CPF (somente números): '))
+    if f'{cpf_cadastro}' in lista_clientes:
+        print('Cliente já existente.')
+    else:
+        nome_cadastro = str(input('Nome completo: '))
+        nascimento_cadastro = str(input('Data de nascimento (xx/xx/xxxx): '))
+        logradouro_cadastro = str(input('Endereço - Rua/Avenida: '))
+        numero_cadastro = str(input('Endereço - Nº: '))
+        bairro_cadastro = str(input('Endereço - Bairro: '))
+        cidade_cadastro = str(input('Endereço - Cidade: '))
+        uf_cadastro = str(input('Endereço - UF: '))
+        endereco_cadastro = logradouro_cadastro + ', ' + numero_cadastro + ' - ' + bairro_cadastro + ' - ' + cidade_cadastro + '/' + uf_cadastro
+
+        usuario['CPF'] = cpf_cadastro
+        usuario['nome'] = nome_cadastro
+        usuario['nascimento'] = nascimento_cadastro
+        usuario['endereco'] = endereco_cadastro
+
+        chave_principal = usuario['CPF']
+        lista_clientes[f'{chave_principal}'] = usuario
+
+        return lista_clientes
+
 banco = 'Goliath National Bank (GNB)'
 slogan = 'The world leader in credit and banking'
 menu ='''         Seja bem-vindo ao GNB!
+
+Novo no GNB? ----------------------------
+[N] Cadastrar novo cliente
+[C] Cadastrar conta
+
+Já é nosso cliente? --------------------- 
 [S] Sacar
 [D] Depositar
 [E] Consultar extrato
@@ -76,6 +107,7 @@ menu ='''         Seja bem-vindo ao GNB!
 
 Selecione uma operação: '''
 
+clientes = {}
 opcao = 'Início'
 saques_restantes = 3
 saldo = 1500.0
@@ -115,6 +147,10 @@ while True:
     elif opcao == 'Q':
         print('      O GNB agradece a preferência!\n')
         break
+    
+    elif opcao == 'N':
+        clientes = cadastrar_usuario(clientes)
+        print(clientes)
     
     else:
         print('   Operação inválida. Tente novamente\n')
